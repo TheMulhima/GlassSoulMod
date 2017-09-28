@@ -48,6 +48,7 @@ namespace GlassSoulsMod
             PlayerData playerData = PlayerData.instance;
             playerData.nailDamage = 5 + playerData.nailSmithUpgrades * 4;
             playerData.nailDamage += playerData.health + playerData.healthBlue - 4;
+            PlayMakerFSM.BroadCastEvent("UPDATE NAIL DAMAGE");
         }
 
         public int OnHealthTaken(int damage)
