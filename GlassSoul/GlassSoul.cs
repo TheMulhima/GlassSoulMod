@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Modding;
 using HutongGames.PlayMaker;
 using Modding.Menu;
@@ -15,7 +16,7 @@ namespace GlassSoulsMod
         public void OnLoadGlobal(GlobalSettings s) => settings = s;
         public GlobalSettings OnSaveGlobal() => settings;
 
-        public override string GetVersion() => "v1.1.0 - 0";
+        public override string GetVersion() => "v1.1.0 - 1";
 
 
         public override void Initialize()
@@ -28,12 +29,10 @@ namespace GlassSoulsMod
         private HitInstance IncreseDamage(Fsm owner, HitInstance hit)
         {
             if (!settings._1_ExtraDamage_PerHealth) return hit;
-            
-            int nailDamage = HeroController.instance.transform.Find("Attacks/Slash").GetComponent<PlayMakerFSM>()
-                .FsmVariables.GetFsmInt("damageDealt").Value;
-                
-            hit.DamageDealt = nailDamage + PlayerData.instance.health + PlayerData.instance.healthBlue - 4;
 
+            int increase = PlayerData.instance.health + PlayerData.instance.healthBlue - 4;
+
+            hit.DamageDealt += increase;
             return hit;
         }
 
