@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Modding;
 using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
 using Modding.Menu;
 using Modding.Menu.Config;
 using UnityEngine;
@@ -18,21 +19,52 @@ namespace GlassSoulsMod
 
         public override string GetVersion() => "v1.1.0 - 1";
 
+        private static string[] Cyclone = new[]
+        {
+            "Hit L", "Hit R",
+        };
+        
+        private static string[] Nart = new[]
+        {
+            "Great Slash", "Dash Slash", Cyclone[0],Cyclone[1]
+        };
+
+        private static string[] Slash = new[]
+        {
+            "Slash", "DownSlash", "UpSlash"
+        };
+        
 
         public override void Initialize()
         {
             Log("Initializing Glass Soul");
             ModHooks.TakeHealthHook += OnHealthTaken;
-            ModHooks.HitInstanceHook += IncreseDamage;
+            ModHooks.HitInstanceHook += IncreaseDamage;
         }
 
-        private HitInstance IncreseDamage(Fsm owner, HitInstance hit)
+        private HitInstance IncreaseDamage(Fsm owner, HitInstance hit)
         {
             if (!settings._1_ExtraDamage_PerHealth) return hit;
 
             int increase = PlayerData.instance.health + PlayerData.instance.healthBlue - 4;
+            int nailDamage = PlayerData.instance.nailDamage;
 
-            hit.DamageDealt += increase;
+            if (Nart.Contains(hit.Source.name))
+            {
+                float Damage = (float) (nailDamage + increase) * (Cyclone.Contains(hit.Source.name) ? 1.25f : 2.5f);
+                
+                if (PlayerData.instance.equippedCharm_6)
+                {
+                    Damage *= 1.75f;
+                }
+
+                hit.DamageDealt = Mathf.RoundToInt(Damage);
+            }
+            else if (Slash.Contains(hit.Source.name))
+            {
+                hit.DamageDealt += increase;
+            }
+
             return hit;
         }
 
@@ -138,7 +170,7 @@ namespace GlassSoulsMod
         public void Unload()
         {
             Log("UnLoading Glass Soul");
-            ModHooks.HitInstanceHook -= IncreseDamage;
+            ModHooks.HitInstanceHook -= IncreaseDamage;
             ModHooks.TakeHealthHook -= OnHealthTaken;
         }
     }
