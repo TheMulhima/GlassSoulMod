@@ -18,7 +18,7 @@ namespace GlassSoulsMod
         public void OnLoadGlobal(GlobalSettings s) => settings = s;
         public GlobalSettings OnSaveGlobal() => settings;
 
-        public override string GetVersion() => "v1.1.0 - 2";
+        public override string GetVersion() => "v1.1.0 - 3";
 
         private static string[] Cyclone = new[]
         {
