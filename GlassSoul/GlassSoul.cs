@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using HKMirror;
 using Modding;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
@@ -17,7 +18,7 @@ namespace GlassSoulsMod
         public void OnLoadGlobal(GlobalSettings s) => settings = s;
         public GlobalSettings OnSaveGlobal() => settings;
 
-        public override string GetVersion() => "v1.1.0 - 1";
+        public override string GetVersion() => "v1.1.0 - 2";
 
         private static string[] Cyclone = new[]
         {
@@ -46,14 +47,14 @@ namespace GlassSoulsMod
         {
             if (!settings._1_ExtraDamage_PerHealth) return hit;
 
-            int increase = PlayerData.instance.health + PlayerData.instance.healthBlue - 4;
-            int nailDamage = PlayerData.instance.nailDamage;
+            int increase = PlayerDataAccess.health + PlayerDataAccess.healthBlue - 4;
+            int nailDamage = PlayerDataAccess.nailDamage;
 
             if (Nart.Contains(hit.Source.name))
             {
                 float Damage = (float) (nailDamage + increase) * (Cyclone.Contains(hit.Source.name) ? 1.25f : 2.5f);
                 
-                if (PlayerData.instance.equippedCharm_6)
+                if (PlayerDataAccess.equippedCharm_6)
                 {
                     Damage *= 1.75f;
                 }
@@ -71,7 +72,7 @@ namespace GlassSoulsMod
         private int OnHealthTaken(int damage)
         {
             Log("GlassSoulsMod: On health taken");
-            PlayerData.instance.health = 0;
+            PlayerDataAccess.health = 0;
             return 0;
         }
 
@@ -80,7 +81,6 @@ namespace GlassSoulsMod
             var dels = toggleDelegates.Value;
             Action<MenuSelectable> cancelAction = _ =>
             {
-                dels.ApplyChange();
                 UIManager.instance.UIGoToDynamicMenu(modListMenu);
             };
             return new MenuBuilder(UIManager.instance.UICanvas.gameObject, "Glass Souls Mod")
@@ -130,7 +130,7 @@ namespace GlassSoulsMod
                                 Style = HorizontalOptionStyle.VanillaStyle,
                                 Description = new DescriptionInfo
                                 {
-                                    Text = "Enable to do 1 extra damage per extra health"
+                                    Text = "Enables you to do 1 extra damage per extra health"
                                 }
                             }, out var ExtraDamage);
                         ExtraDamage.menuSetting.RefreshValueFromGameSettings();

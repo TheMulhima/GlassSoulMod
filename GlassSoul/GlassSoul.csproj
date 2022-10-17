@@ -65,6 +65,9 @@
         <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>$(HollowKnightFolder)UnityEngine.UIModule.dll</HintPath>
         </Reference>
+        <Reference Include="HKMirror">
+          <HintPath>$(HollowKnightFolder)/Mods/HKMirror/HKMirror.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="GlassSoul.cs" />
